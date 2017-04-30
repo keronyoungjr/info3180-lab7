@@ -10,6 +10,7 @@ from flask import render_template, request, redirect, url_for, jsonify
 from bs4 import BeautifulSoup
 import requests
 import urlparse
+from image_getter import scrape_image
 
 ###
 # Routing for your application.
@@ -50,7 +51,7 @@ def page_not_found(error):
 
 
 @app.route('/api/thumbnails',methods=['GET'])
-def image_url():
+def image_viewer():
     images = {"error": None, "message": "Success","thumbnails": scrape_image()}
     return jsonify(images)
 
