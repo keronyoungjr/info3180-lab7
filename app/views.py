@@ -10,7 +10,7 @@ from flask import render_template, request, redirect, url_for, jsonify
 from bs4 import BeautifulSoup
 import requests
 import urlparse
-from image_getter import scrape_image
+from image_getter import *
 
 ###
 # Routing for your application.
@@ -20,7 +20,22 @@ from image_getter import scrape_image
 def home():
     """Render website's home page."""
     return render_template('home.html')
-
+    
+@app.route('/api/thumbnails', methods=['GET'])
+def image_viewer():
+    url = "https://www.walmart.com/ip/54649026"
+    imagelist = scrape_image(url)
+    for each in imagelist:
+        if not each.lower().endswith(('.png', '.jpg', '.jpeg')):
+            imagelist.remove(each) 
+    imagelist= list(set(imagelist));
+    output = jsonify(error = "null", message = "Success", thumbnails= imagelist)
+    return output
+    
+@app.route("/image_veiwer/view")
+def view():
+    return render_template('image_veiwer.html')    
+    
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -50,14 +65,7 @@ def page_not_found(error):
     return render_template('404.html'), 404
 
 
-@app.route('/api/thumbnails',methods=['GET'])
-def image_viewer():
-    images = {"error": None, "message": "Success","thumbnails": scrape_image()}
-    return jsonify(images)
 
-@app.route('/thumbnails/view')
-def images():
-    return render_template('image_viewer.html')
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0",port="8080")
