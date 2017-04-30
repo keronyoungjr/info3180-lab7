@@ -26,7 +26,7 @@ for img in soup.findAll("img", src=True):
    print ''
    
 
-def get_image():
+def scrape_image():
 	image_url = []
 	for img in soup.findAll("img", src=True):	
 	   image_url.append(img["src"])
